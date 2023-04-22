@@ -1,0 +1,19 @@
+---
+title: "FinalProject KNN Algorithm"
+author: "Grant Burden"
+date: "2023-04-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Final Project for INFO 523
+
+```
+
+
+
+
+
