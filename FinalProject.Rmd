@@ -11,8 +11,30 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Final Project for INFO 523
 
+```{r}
+'P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):
+	"Letter Recognition Using Holland-style Adaptive Classifiers".'
+
 ```
 
+```{r}
+library(caret)
+library(tidyverse)
+
+
+```
+
+```{r}
+letters1<- read.csv('./letter-recognition.data', header = FALSE)
+names1 <- read.csv('./letter-recognition.names', header = FALSE)
+
+head(letters1)
+
+
+str(letters1)
+
+
+```
 
 
 
