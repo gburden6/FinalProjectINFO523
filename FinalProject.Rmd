@@ -17,7 +17,7 @@ Final Project for INFO 523
 
 ```
 
-```{r}
+```{r, echo = FALSE, results = 'hide', eval = FALSE}
 library(caret)
 library(tidyverse)
 
@@ -25,17 +25,36 @@ library(tidyverse)
 ```
 
 ```{r}
+#Load the UCi dataset
 letters1<- read.csv('./letter-recognition.data', header = FALSE)
-names1 <- read.csv('./letter-recognition.names', header = FALSE)
+
+#names is citation info--not needed for algorithm
+#names1 <- read.csv('./letter-recognition.names', header = FALSE)
 
 head(letters1)
 
-
+#we have 16 predictors for 26 classes, and 20k observations total
 str(letters1)
 
 
 ```
+Split into test and Traning sets
+Trying a 70/30 train test split
+set seed for the same splits
 
+```{r}
+'set.seed()'
+'indexTrain<- createDataPartition(y = df, times, p = traningdata propostion)'
+'trainSet <- df[indexTrain, ]'
+'testSet <- df[-indexTrain]'
+```
+Try different values for K--find optimal accuracy and plot it
+sqrt(n) ~ 140
 
+```{r}
+'knnfit<- train(df, method = , tuneGrid = )'
+'knnpredict<- predict(knnfit, newdata = )'
+```
 
+Crossfold validation maybe?
 

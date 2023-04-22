@@ -361,26 +361,11 @@ display: none;
 <pre class="r"><code>&#39;P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):
     &quot;Letter Recognition Using Holland-style Adaptive Classifiers&quot;.&#39;</code></pre>
 <pre><code>## [1] &quot;P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):\n\t\&quot;Letter Recognition Using Holland-style Adaptive Classifiers\&quot;.&quot;</code></pre>
-<pre class="r"><code>library(caret)</code></pre>
-<pre><code>## Warning: package &#39;caret&#39; was built under R version 4.2.3</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages
-## ───────────────────────────────────────
-## tidyverse 1.3.2 ──</code></pre>
-<pre><code>## ✔ tibble  3.2.1     ✔ dplyr   1.1.1
-## ✔ tidyr   1.2.1     ✔ stringr 1.5.0
-## ✔ readr   2.1.3     ✔ forcats 0.5.2
-## ✔ purrr   1.0.1</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.2.3</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ✖ purrr::lift()   masks caret::lift()</code></pre>
-<pre class="r"><code>letters1&lt;- read.csv(&#39;./letter-recognition.data&#39;, header = FALSE)
-names1 &lt;- read.csv(&#39;./letter-recognition.names&#39;, header = FALSE)
+<pre class="r"><code>#Load the UCi dataset
+letters1&lt;- read.csv(&#39;./letter-recognition.data&#39;, header = FALSE)
+
+#names is citation info--not needed for algorithm
+#names1 &lt;- read.csv(&#39;./letter-recognition.names&#39;, header = FALSE)
 
 head(letters1)</code></pre>
 <pre><code>##   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17
@@ -390,7 +375,8 @@ head(letters1)</code></pre>
 ## 4  N  7 11  6  6  3  5  9  4   6   4   4  10   6  10   2   8
 ## 5  G  2  1  3  1  1  8  6  6   6   6   5   9   1   7   5  10
 ## 6  S  4 11  5  8  3  8  8  6   9   5   6   6   0   8   9   7</code></pre>
-<pre class="r"><code>str(letters1)</code></pre>
+<pre class="r"><code>#we have 16 predictors for 26 classes, and 20k observations total
+str(letters1)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    20000 obs. of  17 variables:
 ##  $ V1 : chr  &quot;T&quot; &quot;I&quot; &quot;D&quot; &quot;N&quot; ...
 ##  $ V2 : int  2 5 4 7 2 4 4 1 2 11 ...
@@ -409,6 +395,23 @@ head(letters1)</code></pre>
 ##  $ V15: int  8 8 7 10 7 8 8 6 6 1 ...
 ##  $ V16: int  0 4 3 2 5 9 7 2 1 1 ...
 ##  $ V17: int  8 10 9 8 10 7 10 7 7 8 ...</code></pre>
+<p>Split into test and Traning sets Trying a 70/30 train test split set
+seed for the same splits</p>
+<pre class="r"><code>&#39;set.seed()&#39;</code></pre>
+<pre><code>## [1] &quot;set.seed()&quot;</code></pre>
+<pre class="r"><code>&#39;indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)&#39;</code></pre>
+<pre><code>## [1] &quot;indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)&quot;</code></pre>
+<pre class="r"><code>&#39;trainSet &lt;- df[indexTrain, ]&#39;</code></pre>
+<pre><code>## [1] &quot;trainSet &lt;- df[indexTrain, ]&quot;</code></pre>
+<pre class="r"><code>&#39;testSet &lt;- df[-indexTrain]&#39;</code></pre>
+<pre><code>## [1] &quot;testSet &lt;- df[-indexTrain]&quot;</code></pre>
+<p>Try different values for K–find optimal accuracy and plot it sqrt(n)
+~ 140</p>
+<pre class="r"><code>&#39;knnfit&lt;- train(df, method = , tuneGrid = )&#39;</code></pre>
+<pre><code>## [1] &quot;knnfit&lt;- train(df, method = , tuneGrid = )&quot;</code></pre>
+<pre class="r"><code>&#39;knnpredict&lt;- predict(knnfit, newdata = )&#39;</code></pre>
+<pre><code>## [1] &quot;knnpredict&lt;- predict(knnfit, newdata = )&quot;</code></pre>
+<p>Crossfold validation maybe?</p>
 
 
 
