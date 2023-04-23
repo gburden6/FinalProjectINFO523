@@ -36,7 +36,7 @@ head(letters1)
 str(letters1)
 names(letters1)
 
-#Reaname Column Headers
+#Renaame Column Headers
 
 letters2 <- letters1%>%rename(
  letter  = V1,
@@ -58,23 +58,34 @@ letters2 <- letters1%>%rename(
    edgeXSum= V17
    
 ) 
+
+
 ```
 Split into test and Traning sets
 Trying a 70/30 train test split
 set seed for the same splits
 
 ```{r}
-set.seed(4)
-#indexTrain<- createDataPartition(y = df, times, p = traningdata propostion)
-'trainSet <- df[indexTrain, ]'
-'testSet <- df[-indexTrain]'
+#split into training and test
+#Get indices of rows in training set, 70% of rows of letters1, 
+#set seed keep split consistent
+
+set.seed(6)
+indexTrain<- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALSE)
+
+#define training set
+trainSet <- letters2[indexTrain, ]
+#define test set as complement of the test set
+testSet <- letters2[-indexTrain]
+
+
 ```
 Try different values for K--find optimal accuracy and plot it
 sqrt(n) ~ 140
 
 ```{r}
-'knnfit<- train(df, method = , tuneGrid = )'
-'knnpredict<- predict(knnfit, newdata = )'
+#knnFit<- train(trainSet, method ='knn' , tuneGrid = )
+#knnpredict<- predict(knnfit, newdata = )
 ```
 
 Crossfold validation maybe?

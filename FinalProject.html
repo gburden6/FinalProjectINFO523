@@ -412,7 +412,7 @@ str(letters1)</code></pre>
 <pre class="r"><code>names(letters1)</code></pre>
 <pre><code>##  [1] &quot;V1&quot;  &quot;V2&quot;  &quot;V3&quot;  &quot;V4&quot;  &quot;V5&quot;  &quot;V6&quot;  &quot;V7&quot;  &quot;V8&quot;  &quot;V9&quot;  &quot;V10&quot; &quot;V11&quot; &quot;V12&quot;
 ## [13] &quot;V13&quot; &quot;V14&quot; &quot;V15&quot; &quot;V16&quot; &quot;V17&quot;</code></pre>
-<pre class="r"><code>#Reaname Column Headers
+<pre class="r"><code>#Renaame Column Headers
 
 letters2 &lt;- letters1%&gt;%rename(
  letter  = V1,
@@ -436,18 +436,21 @@ letters2 &lt;- letters1%&gt;%rename(
 ) </code></pre>
 <p>Split into test and Traning sets Trying a 70/30 train test split set
 seed for the same splits</p>
-<pre class="r"><code>set.seed(4)
-#indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)
-&#39;trainSet &lt;- df[indexTrain, ]&#39;</code></pre>
-<pre><code>## [1] &quot;trainSet &lt;- df[indexTrain, ]&quot;</code></pre>
-<pre class="r"><code>&#39;testSet &lt;- df[-indexTrain]&#39;</code></pre>
-<pre><code>## [1] &quot;testSet &lt;- df[-indexTrain]&quot;</code></pre>
+<pre class="r"><code>#split into training and test
+#Get indices of rows in training set, 70% of rows of letters1, 
+#set seed keep split consistent
+
+set.seed(6)
+indexTrain&lt;- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALSE)
+
+#define training set
+trainSet &lt;- letters2[indexTrain, ]
+#define test set as complement of the test set
+testSet &lt;- letters2[-indexTrain]</code></pre>
 <p>Try different values for K–find optimal accuracy and plot it sqrt(n)
 ~ 140</p>
-<pre class="r"><code>&#39;knnfit&lt;- train(df, method = , tuneGrid = )&#39;</code></pre>
-<pre><code>## [1] &quot;knnfit&lt;- train(df, method = , tuneGrid = )&quot;</code></pre>
-<pre class="r"><code>&#39;knnpredict&lt;- predict(knnfit, newdata = )&#39;</code></pre>
-<pre><code>## [1] &quot;knnpredict&lt;- predict(knnfit, newdata = )&quot;</code></pre>
+<pre class="r"><code>#knnFit&lt;- train(trainSet, method =&#39;knn&#39; , tuneGrid = )
+#knnpredict&lt;- predict(knnfit, newdata = )</code></pre>
 <p>Crossfold validation maybe?</p>
 
 
