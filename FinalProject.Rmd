@@ -17,10 +17,9 @@ Final Project for INFO 523
 
 ```
 
-```{r, echo = FALSE, results = 'hide', eval = FALSE}
+```{r, echo = FALSE, results = 'hide'}
 library(caret)
 library(tidyverse)
-
 
 ```
 
@@ -35,16 +34,38 @@ head(letters1)
 
 #we have 16 predictors for 26 classes, and 20k observations total
 str(letters1)
+names(letters1)
 
+#Reaname Column Headers
 
+letters2 <- letters1%>%rename(
+ letter  = V1,
+  xPos = V2,
+  yPos = V3,
+  pixWidth = V4,
+   pixHeight= V5,
+  pixOn = V6,
+  xMean = V7,
+   yMean= V8,
+  xMeanSq = V9,
+   yMeanSq= V10,
+   XYMean= V11,
+  xCorY = V12,
+  YCorX = V13,
+  edgeMeanHoriz = V14,
+   edgeYSum= V15,
+   edgeMeanY= V16,
+   edgeXSum= V17
+   
+) 
 ```
 Split into test and Traning sets
 Trying a 70/30 train test split
 set seed for the same splits
 
 ```{r}
-'set.seed()'
-'indexTrain<- createDataPartition(y = df, times, p = traningdata propostion)'
+set.seed(4)
+#indexTrain<- createDataPartition(y = df, times, p = traningdata propostion)
 'trainSet <- df[indexTrain, ]'
 'testSet <- df[-indexTrain]'
 ```

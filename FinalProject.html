@@ -361,6 +361,20 @@ display: none;
 <pre class="r"><code>&#39;P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):
     &quot;Letter Recognition Using Holland-style Adaptive Classifiers&quot;.&#39;</code></pre>
 <pre><code>## [1] &quot;P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):\n\t\&quot;Letter Recognition Using Holland-style Adaptive Classifiers\&quot;.&quot;</code></pre>
+<pre><code>## Warning: package &#39;caret&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ tibble  3.2.1     ✔ dplyr   1.1.1
+## ✔ tidyr   1.2.1     ✔ stringr 1.5.0
+## ✔ readr   2.1.3     ✔ forcats 0.5.2
+## ✔ purrr   1.0.1</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.3</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ✖ purrr::lift()   masks caret::lift()</code></pre>
 <pre class="r"><code>#Load the UCi dataset
 letters1&lt;- read.csv(&#39;./letter-recognition.data&#39;, header = FALSE)
 
@@ -395,13 +409,36 @@ str(letters1)</code></pre>
 ##  $ V15: int  8 8 7 10 7 8 8 6 6 1 ...
 ##  $ V16: int  0 4 3 2 5 9 7 2 1 1 ...
 ##  $ V17: int  8 10 9 8 10 7 10 7 7 8 ...</code></pre>
+<pre class="r"><code>names(letters1)</code></pre>
+<pre><code>##  [1] &quot;V1&quot;  &quot;V2&quot;  &quot;V3&quot;  &quot;V4&quot;  &quot;V5&quot;  &quot;V6&quot;  &quot;V7&quot;  &quot;V8&quot;  &quot;V9&quot;  &quot;V10&quot; &quot;V11&quot; &quot;V12&quot;
+## [13] &quot;V13&quot; &quot;V14&quot; &quot;V15&quot; &quot;V16&quot; &quot;V17&quot;</code></pre>
+<pre class="r"><code>#Reaname Column Headers
+
+letters2 &lt;- letters1%&gt;%rename(
+ letter  = V1,
+  xPos = V2,
+  yPos = V3,
+  pixWidth = V4,
+   pixHeight= V5,
+  pixOn = V6,
+  xMean = V7,
+   yMean= V8,
+  xMeanSq = V9,
+   yMeanSq= V10,
+   XYMean= V11,
+  xCorY = V12,
+  YCorX = V13,
+  edgeMeanHoriz = V14,
+   edgeYSum= V15,
+   edgeMeanY= V16,
+   edgeXSum= V17
+   
+) </code></pre>
 <p>Split into test and Traning sets Trying a 70/30 train test split set
 seed for the same splits</p>
-<pre class="r"><code>&#39;set.seed()&#39;</code></pre>
-<pre><code>## [1] &quot;set.seed()&quot;</code></pre>
-<pre class="r"><code>&#39;indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)&#39;</code></pre>
-<pre><code>## [1] &quot;indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)&quot;</code></pre>
-<pre class="r"><code>&#39;trainSet &lt;- df[indexTrain, ]&#39;</code></pre>
+<pre class="r"><code>set.seed(4)
+#indexTrain&lt;- createDataPartition(y = df, times, p = traningdata propostion)
+&#39;trainSet &lt;- df[indexTrain, ]&#39;</code></pre>
 <pre><code>## [1] &quot;trainSet &lt;- df[indexTrain, ]&quot;</code></pre>
 <pre class="r"><code>&#39;testSet &lt;- df[-indexTrain]&#39;</code></pre>
 <pre><code>## [1] &quot;testSet &lt;- df[-indexTrain]&quot;</code></pre>
