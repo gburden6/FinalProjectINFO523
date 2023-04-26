@@ -76,7 +76,7 @@ indexTrain<- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALS
 #define training set
 trainSet <- letters2[indexTrain, ]
 #define test set as complement of the test set
-testSet <- letters2[-indexTrain]
+testSet <- letters2[-indexTrain, ]
 
 
 ```
@@ -84,9 +84,50 @@ Try different values for K--find optimal accuracy and plot it
 sqrt(n) ~ 140
 
 ```{r}
-#knnFit<- train(trainSet, method ='knn' , tuneGrid = )
-#knnpredict<- predict(knnfit, newdata = )
+knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame( k = c(141)))
+
+#multiKnnFit<- knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame( k = seq(141, 200,2)))
+
+#view results of knnFit model
+knnFit$results
+
+knnTestPredict<- predict(knnFit, newdata = testSet )
+
+
+class(knnTestPredict)
+#how accurate did knn predict the letters on the test set
+confMatrixKnn<- confusionMatrix(knnTestPredict, as.factor(testSet$letter))
+
+confMatrixKnn$byClass[,1]
+
 ```
 
 Crossfold validation maybe?
+knn3 algo
+
+```{r}
+#make the results into a df
+cm_df<- as.data.frame(confMatrixKnn$byClass)
+
+cm_df
+#add column with Letter Classes
+letter_col<- LETTERS[seq(from = 1 , to = 26)]
+letters_df<- cm_df%>%mutate(Letter_Class = letter_col)
+
+plot_balanced_acc<- letters_df%>%ggplot(aes(x = Letter_Class, y = `Balanced Accuracy` ))+
+  geom_point(col = 'darkblue')+
+  ggtitle('Balanced Accuracy for Letter Predictions via KNN')+
+  xlab('Letter Class')
+
+plot_specificity <- letters_df%>%ggplot(aes(x = Letter_Class, y = Specificity ))+
+  geom_point(col = 'darkgreen')+
+  ggtitle('Specificity for Letter Predictions via KNN')+
+  xlab('Letter Class')
+
+
+plot_sensitivity <- letters_df%>%ggplot(aes(x = Letter_Class, y = Sensitivity))+
+  geom_point(col = 'maroon4')+
+  ggtitle('Sensitivityfor Letter Predictions via KNN')+
+  xlab('Letter Class')
+```
 
