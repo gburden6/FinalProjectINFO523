@@ -446,12 +446,129 @@ indexTrain&lt;- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = F
 #define training set
 trainSet &lt;- letters2[indexTrain, ]
 #define test set as complement of the test set
-testSet &lt;- letters2[-indexTrain]</code></pre>
+testSet &lt;- letters2[-indexTrain, ]</code></pre>
 <p>Try different values for K–find optimal accuracy and plot it sqrt(n)
 ~ 140</p>
-<pre class="r"><code>#knnFit&lt;- train(trainSet, method =&#39;knn&#39; , tuneGrid = )
-#knnpredict&lt;- predict(knnfit, newdata = )</code></pre>
-<p>Crossfold validation maybe?</p>
+<pre class="r"><code>knnFit&lt;- train(letter ~., data = trainSet, method =&#39;knn&#39; , tuneGrid = data.frame( k = c(141)))
+
+#multiKnnFit&lt;- knnFit&lt;- train(letter ~., data = trainSet, method =&#39;knn&#39; , tuneGrid = data.frame( k = seq(141, 200,2)))
+
+#view results of knnFit model
+knnFit$results</code></pre>
+<pre><code>##     k  Accuracy     Kappa  AccuracySD     KappaSD
+## 1 141 0.7514384 0.7414681 0.006758421 0.007019078</code></pre>
+<pre class="r"><code>knnTestPredict&lt;- predict(knnFit, newdata = testSet )
+
+
+class(knnTestPredict)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<pre class="r"><code>#how accurate did knn predict the letters on the test set
+confMatrixKnn&lt;- confusionMatrix(knnTestPredict, as.factor(testSet$letter))</code></pre>
+<p>Crossfold validation maybe? knn3 algo</p>
+<pre class="r"><code>#make the results into a df
+cm_df&lt;- as.data.frame(confMatrixKnn$byClass)
+
+cm_df</code></pre>
+<pre><code>##          Sensitivity Specificity Pos Pred Value Neg Pred Value Precision
+## Class: A   0.9276596   0.9941003      0.8650794      0.9970414 0.8650794
+## Class: B   0.8691983   0.9682347      0.5295630      0.9944732 0.5295630
+## Class: C   0.7534247   0.9974044      0.9166667      0.9907185 0.9166667
+## Class: D   0.8207171   0.9794675      0.6358025      0.9920691 0.6358025
+## Class: E   0.6919831   0.9868078      0.6833333      0.9873220 0.6833333
+## Class: F   0.8100775   0.9905923      0.7946768      0.9914560 0.7946768
+## Class: G   0.7818930   0.9873154      0.7224335      0.9907585 0.7224335
+## Class: H   0.5333333   0.9930891      0.7368421      0.9832364 0.7368421
+## Class: I   0.7346939   0.9982618      0.9473684      0.9888085 0.9473684
+## Class: J   0.8050000   0.9984477      0.9470588      0.9933082 0.9470588
+## Class: K   0.5752212   0.9937630      0.7831325      0.9835391 0.7831325
+## Class: L   0.8468468   0.9994806      0.9842932      0.9941450 0.9842932
+## Class: M   0.8991228   0.9934142      0.8436214      0.9960035 0.8436214
+## Class: N   0.7447699   0.9937489      0.8317757      0.9894537 0.8317757
+## Class: O   0.8729508   0.9781022      0.6283186      0.9945220 0.6283186
+## Class: P   0.7575758   0.9944512      0.8454106      0.9903298 0.8454106
+## Class: Q   0.7583333   0.9911428      0.7811159      0.9899393 0.7811159
+## Class: R   0.7783019   0.9830626      0.6273764      0.9918047 0.6273764
+## Class: S   0.5854701   0.9946218      0.8154762      0.9833619 0.8154762
+## Class: T   0.8451883   0.9925334      0.8244898      0.9935686 0.8244898
+## Class: U   0.8068670   0.9960104      0.8909953      0.9922240 0.8909953
+## Class: V   0.9108911   0.9872326      0.7131783      0.9968641 0.7131783
+## Class: W   0.8812785   0.9953279      0.8772727      0.9955002 0.8772727
+## Class: X   0.7903226   0.9864348      0.7153285      0.9909154 0.7153285
+## Class: Y   0.5236052   0.9963573      0.8531469      0.9810418 0.8531469
+## Class: Z   0.8028169   0.9949870      0.8550000      0.9927561 0.8550000
+##             Recall        F1 Prevalence Detection Rate Detection Prevalence
+## Class: A 0.9276596 0.8952772 0.03917973     0.03634545           0.04201400
+## Class: B 0.8691983 0.6581470 0.03951317     0.03434478           0.06485495
+## Class: C 0.7534247 0.8270677 0.03651217     0.02750917           0.03001000
+## Class: D 0.8207171 0.7165217 0.04184728     0.03434478           0.05401801
+## Class: E 0.6919831 0.6876310 0.03951317     0.02734245           0.04001334
+## Class: F 0.8100775 0.8023033 0.04301434     0.03484495           0.04384795
+## Class: G 0.7818930 0.7509881 0.04051350     0.03167723           0.04384795
+## Class: H 0.5333333 0.6187845 0.03501167     0.01867289           0.02534178
+## Class: I 0.7346939 0.8275862 0.04084695     0.03001000           0.03167723
+## Class: J 0.8050000 0.8702703 0.03334445     0.02684228           0.02834278
+## Class: K 0.5752212 0.6632653 0.03767923     0.02167389           0.02767589
+## Class: L 0.8468468 0.9104116 0.03701234     0.03134378           0.03184395
+## Class: M 0.8991228 0.8704883 0.03801267     0.03417806           0.04051350
+## Class: N 0.7447699 0.7858720 0.03984662     0.02967656           0.03567856
+## Class: O 0.8729508 0.7307033 0.04068023     0.03551184           0.05651884
+## Class: P 0.7575758 0.7990868 0.03851284     0.02917639           0.03451150
+## Class: Q 0.7583333 0.7695560 0.04001334     0.03034345           0.03884628
+## Class: R 0.7783019 0.6947368 0.03534512     0.02750917           0.04384795
+## Class: S 0.5854701 0.6815920 0.03901300     0.02284095           0.02800934
+## Class: T 0.8451883 0.8347107 0.03984662     0.03367789           0.04084695
+## Class: U 0.8068670 0.8468468 0.03884628     0.03134378           0.03517839
+## Class: V 0.9108911 0.8000000 0.03367789     0.03067689           0.04301434
+## Class: W 0.8812785 0.8792711 0.03651217     0.03217739           0.03667889
+## Class: X 0.7903226 0.7509579 0.04134712     0.03267756           0.04568189
+## Class: Y 0.5236052 0.6489362 0.03884628     0.02034011           0.02384128
+## Class: Z 0.8028169 0.8280872 0.03551184     0.02850950           0.03334445
+##          Balanced Accuracy
+## Class: A         0.9608799
+## Class: B         0.9187165
+## Class: C         0.8754145
+## Class: D         0.9000923
+## Class: E         0.8393955
+## Class: F         0.9003349
+## Class: G         0.8846042
+## Class: H         0.7632112
+## Class: I         0.8664778
+## Class: J         0.9017239
+## Class: K         0.7844921
+## Class: L         0.9231637
+## Class: M         0.9462685
+## Class: N         0.8692594
+## Class: O         0.9255265
+## Class: P         0.8760135
+## Class: Q         0.8747380
+## Class: R         0.8806822
+## Class: S         0.7900459
+## Class: T         0.9188609
+## Class: U         0.9014387
+## Class: V         0.9490618
+## Class: W         0.9383032
+## Class: X         0.8883787
+## Class: Y         0.7599812
+## Class: Z         0.8989020</code></pre>
+<pre class="r"><code>#add column with Letter Classes
+letter_col&lt;- LETTERS[seq(from = 1 , to = 26)]
+letters_df&lt;- cm_df%&gt;%mutate(Letter_Class = letter_col)
+
+plot_balanced_acc&lt;- letters_df%&gt;%ggplot(aes(x = Letter_Class, y = `Balanced Accuracy` ))+
+  geom_point(col = &#39;darkblue&#39;)+
+  ggtitle(&#39;Balanced Accuracy for Letter Predictions via KNN&#39;)+
+  xlab(&#39;Letter Class&#39;)
+
+plot_specificity &lt;- letters_df%&gt;%ggplot(aes(x = Letter_Class, y = Specificity ))+
+  geom_point(col = &#39;darkgreen&#39;)+
+  ggtitle(&#39;Specificity for Letter Predictions via KNN&#39;)+
+  xlab(&#39;Letter Class&#39;)
+
+
+plot_sensitivity &lt;- letters_df%&gt;%ggplot(aes(x = Letter_Class, y = Sensitivity))+
+  geom_point(col = &#39;maroon4&#39;)+
+  ggtitle(&#39;Sensitivityfor Letter Predictions via KNN&#39;)+
+  xlab(&#39;Letter Class&#39;)</code></pre>
 
 
 
