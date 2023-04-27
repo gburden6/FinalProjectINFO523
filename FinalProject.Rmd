@@ -61,7 +61,7 @@ letters2 <- letters1%>%rename(
 
 
 ```
-Split into test and Traning sets
+Split into test and Training sets
 Trying a 70/30 train test split
 set seed for the same splits
 
@@ -88,6 +88,7 @@ knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame
 
 #multiKnnFit<- knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame( k = seq(141, 200,2)))
 
+
 #view results of knnFit model
 knnFit$results
 
@@ -98,12 +99,9 @@ class(knnTestPredict)
 #how accurate did knn predict the letters on the test set
 confMatrixKnn<- confusionMatrix(knnTestPredict, as.factor(testSet$letter))
 
-confMatrixKnn$byClass[,1]
 
 ```
 
-Crossfold validation maybe?
-knn3 algo
 
 ```{r}
 #make the results into a df
@@ -127,7 +125,50 @@ plot_specificity <- letters_df%>%ggplot(aes(x = Letter_Class, y = Specificity ))
 
 plot_sensitivity <- letters_df%>%ggplot(aes(x = Letter_Class, y = Sensitivity))+
   geom_point(col = 'maroon4')+
-  ggtitle('Sensitivityfor Letter Predictions via KNN')+
+  ggtitle('Sensitivity for Letter Predictions via KNN')+
   xlab('Letter Class')
+```
+
+
+```{r}
+#Model using only edge parameters with K = 141
+
+edgeknnFit<- train(letter ~edgeMeanHoriz+edgeYSum+edgeMeanY+edgeXSum, data = trainSet, method ='knn' , tuneGrid = data.frame( k = c(141)))
+
+# accuracy 0.5226863
+
+edgeknnTestPredict<- predict(edgeknnFit, newdata = testSet )
+
+confusionMatrix(edgeknnTestPredict, as.factor(testSet$letter))
+```
+
+```{r}
+#Training model on mean horizontal and vertical positions, overall width, height and number of 'on' pixels
+
+positionknnFit<- train(letter ~ xPos+
+  yPos+
+  pixWidth+
+   pixHeight+
+  pixOn+
+  xMean+
+   yMean, data = trainSet, method ='knn' , tuneGrid = data.frame( k = c(141)))
+
+PositionknnTestPredict<- predict(positionknnFit, newdata = testSet )
+```
+
+```{r}
+
+set.seed(6)
+indexTrainEighty<- createDataPartition(letters2$xPos, times =1,  p = 0.80, list = FALSE)
+
+#define training set
+trainSetEighty <- letters2[indexTrainEighty, ]
+#define test set as complement of the test set
+testSetEighty <- letters2[-indexTrainEighty, ]
+
+
+knnFitEighty<- train(letter ~., data = trainSetEighty, method ='knn' , tuneGrid = data.frame( k = c(141)))
+
+
 ```
 
