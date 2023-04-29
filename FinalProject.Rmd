@@ -169,6 +169,52 @@ testSetEighty <- letters2[-indexTrainEighty, ]
 
 knnFitEighty<- train(letter ~., data = trainSetEighty, method ='knn' , tuneGrid = data.frame( k = c(141)))
 
+EightyknnPredict<- predict(knnFitEighty, newdata = testSetEighty)
+
+
+confusionMatrix(EightyknnPredict, as.factor(testSetEighty$letter))
+
+
+```
+
+```{r, eval = FALSE}
+#Most Accurate k
+
+set.seed(6)
+
+indexTrainMax<- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALSE)
+
+trainSetMax <- letters2[indexTrainMax, ]
+#define test set as complement of the test set
+testSetMax <- letters2[-indexTrainMax, ]
+
+knnfitMax<- train(letter ~., data = trainSetMax, method ='knn' , tuneGrid = data.frame( k = c(seq(101, 201, 2))))
+
+#best k was 101 at 78% for 101 to 201
+
+str(knnfitMax)
+knnMaxpredict<- predict(knnfitMax, newdata = testSetMax)
+
+confusionMatrix(knnMaxpredict, as.factor(testSetMax$letter) )
+
+
+knnfitMax$results
+```
+
+```{r}
+#Analyze Smaller values of K
+set.seed(6)
+
+indexTrain2<- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALSE)
+testSet2<- letters2[-indexTrain2, ]
+trainSet2<- letters2[indexTrain2, ]
+
+knnfit2<- train(letter ~., data = trainSet2, method ='knn' , tuneLength = 5)
+                #tuneGrid = expand.grid(k = 1:10))
+                  #data.frame( k = c(seq(1, 99, 2))))
+
+knnpredict2<- predict(knnfit2, newdata = testSet2)
+confusionMatrix(knnpredict2, as.factor(testSet2$letter) )
 
 ```
 
