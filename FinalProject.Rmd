@@ -17,19 +17,20 @@ Source of the Dataset:
 	"Letter Recognition Using Holland-style Adaptive Classifiers".'
 
 ```
-
+The code utilizes the tidyverse and caret packages in R.
 ```{r, echo = FALSE, results = 'hide'}
 library(caret)
 library(tidyverse)
 
 ```
+We load and analyze the initial data set. 
 
 ```{r}
 #Load the UCi dataset
 letters1<- read.csv('./letter-recognition.data', header = FALSE)
 
 #names is citation info--not needed for algorithm
-#names1 <- read.csv('./letter-recognition.names', header = FALSE)
+
 
 head(letters1)
 
@@ -37,7 +38,7 @@ head(letters1)
 str(letters1)
 names(letters1)
 
-#Renaame Column Headers
+#Rename Column Headers and make new data frame:letters2
 
 letters2 <- letters1%>%rename(
  letter  = V1,
@@ -63,8 +64,8 @@ letters2 <- letters1%>%rename(
 
 ```
 Split into test and Training sets
-Trying a 70/30 train test split
-set seed for the same splits
+Trying a 70/30 train/test split
+set seed = 6 for the same splits when creating data partitions
 
 ```{r}
 #split into training and test
@@ -82,8 +83,11 @@ testSet <- letters2[-indexTrain, ]
 
 ```
 Try different values for K--find optimal accuracy and plot it
-sqrt(n) ~ 140
+sqrt(n) ~ 140 for the data
 
+Create a Knn model with k = 141. We use odd K since we have even number of groups. 
+The multiknnFit model applies each k value from 141 to 200 to find the K that provides the highest accuracy.
+(Caution: Running KNN for 100 values on 14000 training observations takes several minutes to complete)
 ```{r}
 knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame( k = c(141)))
 
@@ -91,19 +95,18 @@ knnFit<- train(letter ~., data = trainSet, method ='knn' , tuneGrid = data.frame
 
 
 #view results of knnFit model
-knnFit$results
+#knnFit$results
 
 knnTestPredict<- predict(knnFit, newdata = testSet )
 
-
-class(knnTestPredict)
-#how accurate did knn predict the letters on the test set
+#how accurate did knn predict the letters on the test set?
 confMatrixKnn<- confusionMatrix(knnTestPredict, as.factor(testSet$letter))
 
 
 ```
 
-
+We create visualizations for one run of KNN. 
+We see the accuracy for each individual letter.
 ```{r}
 #make the results into a df
 cm_df<- as.data.frame(confMatrixKnn$byClass)
@@ -129,6 +132,14 @@ plot_sensitivity <- letters_df%>%ggplot(aes(x = Letter_Class, y = Sensitivity))+
   ggtitle('Sensitivity for Letter Predictions via KNN')+
   xlab('Letter Class')
 ```
+```{r}
+plot(plot_balanced_acc)
+
+plot(plot_specificity)
+
+plot(plot_sensitivity)
+
+```
 
 
 ```{r}
@@ -143,6 +154,8 @@ edgeknnTestPredict<- predict(edgeknnFit, newdata = testSet )
 confusionMatrix(edgeknnTestPredict, as.factor(testSet$letter))
 ```
 
+
+We run a KNN model, training with only 6 of the features:
 ```{r}
 #Training model on mean horizontal and vertical positions, overall width, height and number of 'on' pixels
 
@@ -177,6 +190,7 @@ confusionMatrix(EightyknnPredict, as.factor(testSetEighty$letter))
 
 
 ```
+The below chunk is set not to evaluate. The run time for KNN with K = 101 to 201 is long. 
 
 ```{r, eval = FALSE}
 #Most Accurate k
@@ -202,6 +216,8 @@ confusionMatrix(knnMaxpredict, as.factor(testSetMax$letter) )
 knnfitMax$results
 ```
 
+KNN Model for smaller K:, 5, 7, 9, 11 and 13, using 5 fold cross validation. 
+Optional lines included for tuneGrid of k = 1 to 99 by twos, or k = 1:10.
 ```{r}
 #Analyze Smaller values of K
 #Crossfold Validation
