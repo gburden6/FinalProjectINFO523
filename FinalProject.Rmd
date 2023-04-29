@@ -1,5 +1,5 @@
 ---
-title: "FinalProject KNN Algorithm"
+title: "Final Project KNN Algorithm"
 author: "Grant Burden"
 date: "2023-04-22"
 output: html_document
@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Final Project for INFO 523
 
+Source of the Dataset:
 ```{r}
 'P. W. Frey and D. J. Slate (Machine Learning Vol 6 #2 March 91):
 	"Letter Recognition Using Holland-style Adaptive Classifiers".'
@@ -203,13 +204,17 @@ knnfitMax$results
 
 ```{r}
 #Analyze Smaller values of K
+#Crossfold Validation
+#Also try first 10 default values for K with Tunegrid
+#Try Pecific K values 1 to 99 by twos
+
 set.seed(6)
 
 indexTrain2<- createDataPartition(letters2$xPos, times =1,  p = 0.70, list = FALSE)
 testSet2<- letters2[-indexTrain2, ]
 trainSet2<- letters2[indexTrain2, ]
-
-knnfit2<- train(letter ~., data = trainSet2, method ='knn' , tuneLength = 5)
+TRControl<- trainControl(method = 'cv', number = 5)
+knnfit2<- train(letter ~., data = trainSet2, method ='knn' , trControl = TRControl, tuneLength = 5)
                 #tuneGrid = expand.grid(k = 1:10))
                   #data.frame( k = c(seq(1, 99, 2))))
 
